@@ -27,7 +27,7 @@ using namespace __gnu_pbds;       */
 
 #define MOD 1000000007
 
-#define inf 1e18;
+#define inf 1000000000000000000
 
 #define vfind(v,x) (find(all(v),x) != (v).end())
 
@@ -193,8 +193,62 @@ ll modinv(ll x , ll mod = MOD){
 char A[1005][1005];
 ll B[100001];
 ll C[100001];
-ll D[100001];
+ll dis[1001][1001]={inf};
+ll dx[]={-1,1,0,0};
+ll dy[]= {0,0,-1,1};
+ll bfs(ll x,ll y, ll n,ll m,ll r,ll c)
+{
 
+    queue< ll > Q;
+    Q.push(x);
+    Q.push(y);
+    dis[x][y]=-1;
+    while(!Q.empty())
+    {
+        ll p=Q.front();
+        Q.pop();
+
+        ll q=Q.front();
+        Q.pop();
+
+        for( int i=0;i<4;i++)
+        {
+
+            x= p+dx[i];
+            y= q+dy[i];
+
+
+            if(A[x][y]=='*' ) continue;
+            if(x<0 || y<0 || x>=r ||y>=c) continue;
+
+            while(A[x][y]!='*' && !(x<0 || y<0 || x>=r ||y>=c))
+            {
+                //cout<<x<<" "<<y<<endl;
+
+                if(dis[x][y]> dis[p][q]+1)
+                {
+                    dis[x][y]= (1+dis[p][q]);
+                     if(x==n && y==m)
+                    {
+                        return dis[x][y];
+                    }
+                Q.push(x);
+                Q.push(y);
+                }
+                x+=dx[i];
+                y+=dy[i];
+
+
+                //cout<<"y"<<endl;
+
+
+            }
+
+        }
+    }
+    return dis[n][m];
+
+}
 
 int main()
 {
@@ -202,7 +256,7 @@ int main()
     cin.tie(NULL);
     cout.tie(NULL);
     #ifndef ONLINE_JUDGE
-    freopen("allo.txt","r",stdin);
+    freopen("allo_spoj.txt","r",stdin);
     #endif
       //  freopen("out.txt","w",stdout);
 
@@ -215,18 +269,36 @@ int main()
       // cin>>t;while(t--){    map<ll,ll> M; string s;
 
 
-        cin>>n>>m;
+        cin>>m>>n;
+        vpll vv;
         fr(i,n)
         {
 
-            fr(i,m)
+            fr(j,m)
             {
                  cin>>A[i][j];
+                 dis[i][j]=INT_MAX;
+                 if(A[i][j]=='C')
+                 {
+                     vv.pb({i,j});
+                    // cout<<i<<" "<<j<<endl;
+                 }
             }
 
 
             //cout<<A[i];
         }
+
+
+
+
+
+      cout<< bfs(vv[0].first,vv[0].second,vv[1].first,vv[1].second,n,m) << endl;
+
+
+
+
+
         ll mx=INT_MIN;
 
 
